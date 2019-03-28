@@ -1,3 +1,9 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .container {
     position: relative;
     width: 700px;

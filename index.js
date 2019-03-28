@@ -1,4 +1,8 @@
 $(document).ready(function(){
+    let tickSound = document.createElement('AUDIO');
+    tickSound.src = './tick.wav';
+    let winSound = document.createElement('AUDIO');
+    winSound.src = './win.wav';
     let columns = $.makeArray($('.column'));
 
     $('.piece').draggable({
@@ -7,7 +11,7 @@ $(document).ready(function(){
         grid: [100, 100],
         helper: 'clone',
 
-        drag:function(event, ui){
+        drag: function(event, ui){
             let xPos = parseInt(ui.position.left / 100);
             $('.available').removeClass('highlight-slot');
             $(columns[xPos]).find('.available').addClass('highlight-slot');
@@ -18,6 +22,7 @@ $(document).ready(function(){
             let target = $(columns[xPos]).find('.available');
             let currentColor = $(this).hasClass('red')? 'red' : 'yellow';
             if(target.length !== 0){
+                tickSound.play();
                 target.removeClass('available').removeClass('highlight-slot').addClass('occupied');
                 target.siblings('.slot:not(.occupied):last').addClass('available');
                 if(currentColor === 'red'){
@@ -28,6 +33,7 @@ $(document).ready(function(){
                     $(this).removeClass('yellow').addClass('red');
                 }
                 if(checkWin(target, currentColor)){
+                    winSound.play();
                     $(this).draggable('disable');
                     let message = $('#message');
                     message.html(`${currentColor} wins!`.toProperCase());
