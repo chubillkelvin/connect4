@@ -1,30 +1,33 @@
 $(document).ready(function(){
+    let columns = $.makeArray($('.column'));
+
     $('.piece').draggable({
-        containment: [0, 0, 600, 600],
+        containment: '.droprow',
         cursor: 'grabbing',
         distance: 50,
         grid: [100, 100],
         helper: 'clone',
-    });
+        
+        drag:function(event, ui){
+            let xPos = parseInt(ui.position.left / 100);
+            $('.available').removeClass('highlight-slot');
+            $(columns[xPos]).find('.available').addClass('highlight-slot');
+        },
 
-    $('.slot').droppable({
-        drop: function(event, ui){
-            if(Object.values(ui.draggable.context.classList).indexOf('red') !== -1){
-                $(this).addClass('red').removeClass('lightgray').droppable({disabled: 'true'});
-            } else {
-                $(this).addClass('yellow').removeClass('lightgray').droppable({disabled: 'true'});
+        stop: function(event, ui){
+            let xPos = parseInt(ui.position.left / 100);
+            let target = $(columns[xPos]).find('.available');
+            if(target.length !== 0){
+                target.removeClass('available').removeClass('highlight-slot').addClass('occupied');
+                target.siblings('.slot:not(.occupied):last').addClass('available');
+                if($(this).hasClass('red')){
+                    target.addClass('red');
+                    $(this).removeClass('red').addClass('yellow');
+                } else {
+                    target.addClass('yellow');
+                    $(this).removeClass('yellow').addClass('red');
+                }
             }
-            if($('.piece').hasClass('red')){
-                $('.piece').removeClass('red').addClass('yellow');
-            } else {
-                $('.piece').removeClass('yellow').addClass('red');
-            }
-        },
-        activate: function(event, ui){
-            $(this).addClass('lightgray');
-        },
-        deactivate: function(event, ui){
-            $(this).removeClass('lightgray');
         },
     });
 });

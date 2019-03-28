@@ -11,22 +11,37 @@
     background-color: yellow !important;
 }
 
-.lightgray {
-    background-color: lightgray !important;
-}
-.square {
-    width: 100px;
+.droprow {
+    width: 700px;
     height: 100px;
     float: left;
+    padding: 0;
+    margin: 0;
+}
+
+.column {
+    width: 100px;
+    height: 600px;
+    float: left;
+    padding: 0;
+    margin: 0;
     background-color: blue;
+    display: flex;
+    flex-direction: column;
 }
 
 .slot {
-    width: 80%;
-    height: 80%;
-    margin: 10%;
+    box-sizing: border-box;
+    width: 80px;
+    height: 80px;
+    margin: 10px;
     border-radius: 100%;
     background-color: white;
+}
+
+.highlight-slot {
+    background-color: lightgray;
+    border: 6px dashed orange;
 }
 
 .piece {
