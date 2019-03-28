@@ -1,0 +1,38 @@
+.container {
+    width: 700px;
+    height: 700px;
+}
+
+.red {
+    background-color: red !important;
+}
+
+.yellow {
+    background-color: yellow !important;
+}
+
+.lightgray {
+    background-color: lightgray !important;
+}
+.square {
+    width: 100px;
+    height: 100px;
+    float: left;
+    background-color: blue;
+}
+
+.slot {
+    width: 80%;
+    height: 80%;
+    margin: 10%;
+    border-radius: 100%;
+    background-color: white;
+}
+
+.piece {
+    width: 80px;
+    height: 80px;
+    margin: 10px;
+    border-radius: 100%;
+}
+
