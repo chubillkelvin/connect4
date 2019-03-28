@@ -16,40 +16,40 @@ $(document).ready(function(){
         stop: function(event, ui){
             let xPos = parseInt(ui.position.left / 100);
             let target = $(columns[xPos]).find('.available');
+            let currentColor = $(this).hasClass('red')? 'red' : 'yellow';
             if(target.length !== 0){
                 target.removeClass('available').removeClass('highlight-slot').addClass('occupied');
                 target.siblings('.slot:not(.occupied):last').addClass('available');
-                if($(this).hasClass('red')){
+                if(currentColor === 'red'){
                     target.addClass('red');
                     $(this).removeClass('red').addClass('yellow');
                 } else {
                     target.addClass('yellow');
                     $(this).removeClass('yellow').addClass('red');
                 }
-                console.log(checkWin(target))
+                console.log(checkWin(target, currentColor));
             }
         },
     });
 });
 
-function checkWin(lastMove){
+function checkWin(lastMove, color){
     let currentColIndex = $(lastMove).closest('.column').index('.column');
     let currentPosIndex = $(lastMove).index();
-    let color = $(lastMove).hasClass('red')? 'red' : 'yellow';
 
     // Check for vertical
     let verticalSlots = $.makeArray($(`.column:eq(${currentColIndex}) > .slot`)).map((slot) => $(slot).hasClass(color)? 1 : 0);
     for(let i=0; i<3; i++){
         if(verticalSlots.slice(i, i+4).reduce((total, num) => total + num) === 4){
-            return `${color} wins!`;
+            return true;
         }
     }
 
     // Check for horizontal
     let horizontalSlots = $.makeArray($(`.column > .slot:nth-child(${currentPosIndex+1})`)).map((slot) => $(slot).hasClass(color)? 1 : 0);
-    for(let i=0; i<3; i++){
+    for(let i=0; i<4; i++){
         if(horizontalSlots.slice(i, i+4).reduce((total, num) => total + num) === 4){
-            return `${color} wins!`;
+            return true;
         }
     }
 
@@ -113,19 +113,19 @@ function checkWin(lastMove){
     }
     line1 = line1.map((slot) => $(slot).hasClass(color)? 1 : 0);
     line2 = line2.map((slot) => $(slot).hasClass(color)? 1 : 0);
-    
+
     // Check for the two slanting lines
     if(line1.length >= 4){
         for(let i=0; i<=line1.length-4; i++){
             if(line1.slice(i, i+4).reduce((total, num) => total + num) === 4){
-                return `${color} wins!`;
+                return true;
             }
         }
     }
     if(line2.length >= 4){
         for(let i=0; i<=line2.length-4; i++){
             if(line2.slice(i, i+4).reduce((total, num) => total + num) === 4){
-                return `${color} wins!`;
+                return true;
             }
         }
     }
