@@ -27,7 +27,13 @@ $(document).ready(function(){
                     target.addClass('yellow');
                     $(this).removeClass('yellow').addClass('red');
                 }
-                console.log(checkWin(target, currentColor));
+                if(checkWin(target, currentColor)){
+                    $(this).draggable('disable');
+                    let message = $('#message');
+                    message.html(`${currentColor} wins!`.toProperCase());
+                    message.css('color', currentColor);
+                    message.css('display', 'block');
+                }
             }
         },
     });
@@ -130,4 +136,8 @@ function checkWin(lastMove, color){
         }
     }
     return false;
+}
+
+String.prototype.toProperCase = function () {
+    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
