@@ -4,10 +4,9 @@ $(document).ready(function(){
     $('.piece').draggable({
         containment: '.droprow',
         cursor: 'grabbing',
-        distance: 50,
         grid: [100, 100],
         helper: 'clone',
-        
+
         drag:function(event, ui){
             let xPos = parseInt(ui.position.left / 100);
             $('.available').removeClass('highlight-slot');
@@ -27,7 +26,108 @@ $(document).ready(function(){
                     target.addClass('yellow');
                     $(this).removeClass('yellow').addClass('red');
                 }
+                console.log(checkWin(target))
             }
         },
     });
 });
+
+function checkWin(lastMove){
+    let currentColIndex = $(lastMove).closest('.column').index('.column');
+    let currentPosIndex = $(lastMove).index();
+    let color = $(lastMove).hasClass('red')? 'red' : 'yellow';
+
+    // Check for vertical
+    let verticalSlots = $.makeArray($(`.column:eq(${currentColIndex}) > .slot`)).map((slot) => $(slot).hasClass(color)? 1 : 0);
+    for(let i=0; i<3; i++){
+        if(verticalSlots.slice(i, i+4).reduce((total, num) => total + num) === 4){
+            return `${color} wins!`;
+        }
+    }
+
+    // Check for horizontal
+    let horizontalSlots = $.makeArray($(`.column > .slot:nth-child(${currentPosIndex+1})`)).map((slot) => $(slot).hasClass(color)? 1 : 0);
+    for(let i=0; i<3; i++){
+        if(horizontalSlots.slice(i, i+4).reduce((total, num) => total + num) === 4){
+            return `${color} wins!`;
+        }
+    }
+
+    // Check for slanting
+
+    // Check for entries in the two slanting lines
+    let leftTop = { col: currentColIndex, pos: currentPosIndex, };
+    let rightBot = { col: currentColIndex, pos: currentPosIndex, };
+    let leftBot = { col: currentColIndex, pos: currentPosIndex, };
+    let rightTop = { col: currentColIndex, pos: currentPosIndex, };
+
+    let fixedTop = false;
+    let fixedBot = false;
+    let i = currentColIndex;
+    while(i > 0){
+        i -= 1;
+
+        if(leftTop.pos-1 >= 0 && !fixedTop){
+            leftTop.col = i;
+            leftTop.pos -= 1;
+        } else {
+            fixedTop = true;
+        }
+
+        if(leftBot.pos+1 <= 5 && !fixedBot){
+            leftBot.col = i;
+            leftBot.pos += 1;
+        } else {
+            fixedBot = true;
+        }
+    }
+
+    fixedTop = false;
+    fixedBot = false;
+    i = currentColIndex;
+    while(i < 6){
+        i += 1;
+
+        if(rightTop.pos-1 >= 0 && !fixedTop){
+            rightTop.col = i;
+            rightTop.pos -= 1;
+        } else {
+            fixedTop = true;
+        }
+
+        if(rightBot.pos+1 <= 5 && !fixedBot){
+            rightBot.col = i;
+            rightBot.pos += 1;
+        } else {
+            fixedBot = true;
+        }
+    }
+
+    let line1 = [];
+    for(let i=0; i<=rightBot.col-leftTop.col; i++){
+        line1.push($(`.column:eq(${leftTop.col+i})`).find(`.slot:eq(${leftTop.pos+i})`));
+    }
+    let line2 = [];
+    for(let i=0; i<=rightTop.col-leftBot.col; i++){
+        line2.push($(`.column:eq(${leftBot.col+i})`).find(`.slot:eq(${leftBot.pos-i})`));
+    }
+    line1 = line1.map((slot) => $(slot).hasClass(color)? 1 : 0);
+    line2 = line2.map((slot) => $(slot).hasClass(color)? 1 : 0);
+    
+    // Check for the two slanting lines
+    if(line1.length >= 4){
+        for(let i=0; i<=line1.length-4; i++){
+            if(line1.slice(i, i+4).reduce((total, num) => total + num) === 4){
+                return `${color} wins!`;
+            }
+        }
+    }
+    if(line2.length >= 4){
+        for(let i=0; i<=line2.length-4; i++){
+            if(line2.slice(i, i+4).reduce((total, num) => total + num) === 4){
+                return `${color} wins!`;
+            }
+        }
+    }
+    return false;
+}
