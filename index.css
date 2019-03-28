@@ -73,3 +73,39 @@ body {
     line-height: 700px;
     text-shadow: -5px 0 black, 0 5px black, 5px 0 black, 0 -5px black;
 }
+
+#prompt > .cursor {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    left: 45px;
+    top: 45px;
+    background-position: center;
+    background-size: cover;
+    animation: moveCursor 1.5s ease-in infinite;
+}
+
+#prompt > .prompt-message {
+    position: absolute;
+    left: 170px;
+    top: 5px;
+    margin: 0;
+    padding: 0;
+    color: green;
+    font-family: Helvetica;
+    font-size: 30px;
+    font-weight: bold;
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+    animation: moveMessage 1s linear alternate infinite;
+}
+
+@keyframes moveCursor {
+    0% {left: 45px; background-image: url('./click.png');}
+    50% {background-image: url('./drag.png');}
+    100% {left: 150px;}
+}
+
+@keyframes moveMessage {
+    from {transform: scale(1);}
+    to {transform: scale(1.2);}
+}

@@ -5,11 +5,14 @@ $(document).ready(function(){
     winSound.src = './win.wav';
     let columns = $.makeArray($('.column'));
 
+    $(window).mousedown(function(){
+        $('#prompt').hide();
+    });
+
     $('.piece').draggable({
         containment: '.droprow',
         cursor: 'grabbing',
         grid: [100, 100],
-        helper: 'clone',
 
         drag: function(event, ui){
             let xPos = parseInt(ui.position.left / 100);
